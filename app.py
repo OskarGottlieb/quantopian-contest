@@ -26,15 +26,40 @@ class VisualApp:
 
 
 	def _load_data(self) -> pd.DataFrame:
-		return pd.read_csv('aggregate.csv').set_index(['date']).sort_index()
+		return pd.read_csv('aggregate.csv').set_index(['name', 'date']).sort_index()
 
 
 	def _get_quants_winnings(self) -> Dict[str, int]:
-		winnings = {(x + 1): y for x, y in enumerate(range(50, 0, -5))}
-		ranks = self._dataframe.set_index('name').loc[:, 'rank']
-		ranks.loc[ranks > 10] = 0
-		quants_with_money = ranks.replace(winnings).groupby(ranks.index).sum().sort_values(ascending = False)
+		'''
+		Calculates the most profitable quants and outputs them in form of a dictionary sorted in a descending order.
+		Also calls a method which adds new column into the :attr:`self._dataframe` dataframe.
+		:return:
+		'''
+		daily_winnings = {(x + 1): y for x, y in enumerate(range(50, 0, -5))}
+		rankings = self._dataframe.loc[:, 'rank']
+		rankings.loc[rankings > 10] = 0
+		winnings = rankings.replace(daily_winnings)
+		self._add_cumulative_sum(winnings = winnings)
+		quants_with_money = winnings.groupby(winnings.index.get_level_values('name')).sum().sort_values(ascending = False)
 		return quants_with_money.to_dict()
+
+
+	def _add_cumulative_sum(self, winnings: pd.DataFrame) -> None:
+		'''
+		Transforms the rankings into a new column with cumulative winnings
+		'''
+		winnings = winnings.to_frame() \
+			.reset_index()
+		winnings.loc[winnings['rank'] == 0, 'rank'] = None
+		winnings = pd.pivot_table(winnings, 'rank', 'name', 'date') \
+			.cumsum(axis = 1) \
+			.fillna(axis= 1, method = 'ffill') \
+			.stack() \
+			.to_frame() \
+			.rename(columns = {0: 'cumsum_winnings'})
+
+		self._dataframe = self._dataframe.merge(winnings, how = 'outer', left_index = True, right_index = True)
+		self._dataframe.reset_index('name', inplace = True)
 
 	@staticmethod
 	def _beautify_column_name(column: str) -> str:
@@ -193,7 +218,7 @@ class VisualApp:
 					dcc.Dropdown(
 						id='dropdown_column',
 						options = self._get_dataframe_columns(),
-						value='rank'
+						value='cumsum_winnings'
 					),
 				], className='col-md-3 col-sm-3, col-xs-12'),
 				html.Div(children=[
