@@ -113,7 +113,14 @@ class VisualApp:
 					html.Div(children = [dcc.Graph(id='main')], className= 'container-fluid')
 				]),
 				dcc.Tab(label='Statistics', children = [
-					html.Div('statistics', className='container-fluid')
+					html.Div(
+						dcc.Markdown(dedent('''
+							### Statistics
+							Other statistics and analysis will be added in the future.
+							You can submit a Pull Request on [Github](https://github.com/OskarGottlieb/) if you feel
+							like contributing to this project.
+						''')),
+					className='container')
 				])
 			], className='container')
 		])
@@ -171,7 +178,17 @@ class VisualApp:
 		return html.Div(children = [
 			dcc.Markdown(dedent('''
 			     # Quantopian Contest Analytics
-			     The goal of this project is to look in more details at the Quantopian contestants.
+			     [Quantopian](https://www.quantopian.com) is a crowd-sourced hedge-fund which organizes a daily trading
+			     contest. Anyone can submit an algorithm in order to compete for daily prize pool or eventually get money
+			     allocated to his or her algorithm.
+			     
+			     This website was created as a way to visualize the statistics related to quant's strategies which
+			     Quantopian outputs. In the future I'd like to add ad-hoc analysis, such as clustering strategies
+			     based on their characteristics (leverage, exposure to various factors, etc..). Feel free to play around
+			     with it, the code is freely available on my [Github](https://github.com/OskarGottlieb/) profile.
+			     
+			     The application is written almost entirely in [Dash](https://github.com/plotly/dash). This allows
+			     you to play around interactively with the plots - you can zoom in/out, make and download a screenshot, etc..
 			'''))
 		], className='container')
 
@@ -180,9 +197,10 @@ class VisualApp:
 			html.Hr(),
 			dcc.Markdown(dedent('''
 				## Settings
-				By default 
-				Below you can select whether to look at quants, sorted by their cumulative PnL or you can handpick
-				the one specific which you want to look into.
+				Below you can select the quants to display either by their sorted cumulative contest winnings or you can
+				handpick them from the dropdown menu. So far the application only supports plotting values of the various
+				time series which Quantopian outputs. You can select the time series to be plotted from the drop down
+				menu as well.
 			''')),
 			html.Div(children = [
 				html.Div(children= [
@@ -192,7 +210,7 @@ class VisualApp:
 					dcc.RadioItems(
 						id='radio_select_quants',
 						options=[
-							{'label': 'By cumulative PnL', 'value': 'rank'},
+							{'label': 'By cumulative winnings', 'value': 'rank'},
 							{'label': 'By nicknames', 'value': 'name'}
 						],
 						value='rank',
@@ -200,7 +218,7 @@ class VisualApp:
 				], className='col-md-3 col-sm-3, col-xs-12'),
 				html.Div(children=[
 					dcc.Markdown(dedent('''
-						#### Quants by Cumulative Winnings:
+						#### Quants by cumulative winnings:
 					''')),
 					dcc.RangeSlider(
 						id='slider_rankings',
@@ -223,7 +241,7 @@ class VisualApp:
 				], className='col-md-3 col-sm-3, col-xs-12'),
 				html.Div(children=[
 					dcc.Markdown(dedent('''
-						#### Quants by Nickname:
+						#### Quants by nicknames:
 					''')),
 					dcc.Dropdown(
 						id='dropdown_quants',
