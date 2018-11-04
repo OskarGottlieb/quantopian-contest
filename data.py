@@ -14,13 +14,13 @@ END_DATE = '20181031'
 
 
 
-def get_date_range(start_date: str, end_date: str):
+def get_date_range(start_date: str, end_date: str) -> rrule:
 	start_date = datetime.datetime.strptime(start_date, '%Y%m%d').date()
 	end_date = datetime.datetime.strptime(end_date, '%Y%m%d').date()
 	return rrule(DAILY, dtstart=start_date, until=end_date, byweekday=(MO,TU,WE,TH,FR))
 
 
-def download_data(sequential_errors_count: int = 20):
+def download_data(sequential_errors_count: int = 20) -> None:
 	errors_count = 0
 	headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36'}
 	dates = get_date_range(START_DATE, END_DATE)
@@ -45,7 +45,7 @@ def download_data(sequential_errors_count: int = 20):
 			errors_count += 1
 
 
-def analyze_data():
+def aggregate_data() -> None:
 	try:
 		os.remove('aggregate.csv')
 	except:
@@ -65,8 +65,8 @@ def analyze_data():
 if __name__ == '__main__':
 	if len(sys.argv) == 2:
 		method = sys.argv[1]
-		if method == 'analyze':
-			analyze_data()
+		if method == 'aggregate':
+			aggregate_data()
 		elif method == 'download':
 			download_data()
 		else:

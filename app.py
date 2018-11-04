@@ -2,13 +2,14 @@ from typing import Any, Dict, List, Optional
 
 from dash.dependencies import Input, Output, State
 from textwrap import dedent
-
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
 import pandas as pd
 import plotly.graph_objs as go
+
 import settings.dev as settings
+
 
 
 class VisualApp:
@@ -21,8 +22,8 @@ class VisualApp:
 		self._init_app_content()
 
 
-	def run(self) -> None:
-		self._app.run_server(debug=True)
+	def run(self, host: str = '0.0.0.0') -> None:
+		self._app.run_server(host = host, debug = settings.DEBUG_MODE)
 
 
 	def _load_data(self) -> pd.DataFrame:
@@ -273,4 +274,4 @@ class VisualApp:
 
 if __name__ == '__main__':
 	app = VisualApp()
-	app.run()
+	app.run(host = '0.0.0.0')
