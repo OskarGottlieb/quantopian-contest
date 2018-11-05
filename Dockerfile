@@ -5,8 +5,8 @@ COPY . /srv/dash
 WORKDIR /srv/dash
 RUN pip install -r requirements.txt
 
-CMD ["python",  "data.py", "download"]
-CMD ["python",  "data.py", "aggregate"]
+RUN python data.py download
+RUN python data.py aggregate
 
 EXPOSE 8050
 CMD ["python",  "app.py"]

@@ -10,7 +10,7 @@ import requests
 
 BASE_URL = 'https://www.quantopian.com/contest/download_results?date='
 START_DATE = '20180101'
-END_DATE = '20181031'
+END_DATE = (datetime.date.today() - datetime.timedelta(-1)).strftime('%Y%m%d')
 
 
 
@@ -23,6 +23,7 @@ def get_date_range(start_date: str, end_date: str) -> rrule:
 def download_data(sequential_errors_count: int = 20) -> None:
 	errors_count = 0
 	headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36'}
+	os.makedirs('data', exist_ok = True)
 	dates = get_date_range(START_DATE, END_DATE)
 	for date in sorted(dates, reverse = True):
 		date = date.strftime('%Y-%m-%d')
