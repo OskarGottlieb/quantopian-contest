@@ -11,7 +11,6 @@ import plotly.graph_objs as go
 import settings.dev as settings
 
 
-
 class VisualApp:
 
 	def __init__(self) -> None:
