@@ -271,6 +271,8 @@ class VisualApp:
 		)
 
 
+dash_app = VisualApp()
+server = dash_app._app.server
+
 if __name__ == '__main__':
-	app = VisualApp()
-	app.run(host = '0.0.0.0')
+	dash_app.run('0.0.0.0')
