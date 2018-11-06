@@ -36,7 +36,7 @@ class VisualApp:
 		:return:
 		'''
 		daily_winnings = {(x + 1): y for x, y in enumerate(range(50, 0, -5))}
-		rankings = self._dataframe.loc[:, 'rank']
+		rankings = self._dataframe.loc[:, 'rank'].copy()
 		rankings.loc[rankings > 10] = 0
 		winnings = rankings.replace(daily_winnings)
 		self._add_cumulative_sum(winnings = winnings)
@@ -117,7 +117,7 @@ class VisualApp:
 						dcc.Markdown(dedent('''
 							### Statistics
 							Other statistics and analysis will be added in the future.
-							You can submit a Pull Request on [Github](https://github.com/OskarGottlieb/) if you feel
+							You can submit a Pull Request on [Github](https://github.com/OskarGottlieb/quantopian-contest) if you feel
 							like contributing to this project.
 						''')),
 					className='container')
@@ -185,7 +185,7 @@ class VisualApp:
 			     This website was created as a way to visualize the statistics related to quant's strategies which
 			     Quantopian outputs. In the future I'd like to add ad-hoc analysis, such as clustering strategies
 			     based on their characteristics (leverage, exposure to various factors, etc..). Feel free to play around
-			     with it, the code is freely available on my [Github](https://github.com/OskarGottlieb/) profile.
+			     with it, the code is freely available at this [Github](https://github.com/OskarGottlieb/quantopian-contest) repo.
 			     
 			     The application is written almost entirely in [Dash](https://github.com/plotly/dash). This allows
 			     you to play around interactively with the plots - you can zoom in/out, make and download a screenshot, etc..
